@@ -4,6 +4,7 @@ const sidebar = require( "./sidebar.js" )
 
 
 module.exports = {
+  base: '/vue-docs-template/',
   title: 'Vue.js',
   description: 'Vue.js - The Progressive JavaScript Framework',
   head: [
