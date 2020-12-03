@@ -14,18 +14,3 @@ features:
     details: VuePress 为每个页面预渲染生成静态的 HTML，同时在页面被加载的时候，将作为 SPA 运行。
 footer: MIT Licensed | Copyright © 2018-present Evan You
 ---
-
-<p>icon图标测试</p>
-
-<svg class="icon" aria-hidden="true">
-  <use xlink:href="#icon-arrow-right"></use>
-</svg>
-
-<style>
-.icon {
-  width: 1em; height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
-}
-</style>
