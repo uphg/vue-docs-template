@@ -8,18 +8,18 @@
 
 **1. 拷贝仓库**
 
-```
+```sh
 git clone git@github.com:uphg/vue-docs-template.git
 ```
 
 **2. 初始化**
 
-```
+```sh
 yarn # or npm install
 ```
 
 **3. 运行测试**
 
-```
+```sh
 yarn serve # or npm run serve
 ```

@@ -1,5 +1,5 @@
 ---
-title: "Markdown 拓展"
+title: "Markdown 语法"
 categories:
     - 前端
 tags:
@@ -9,16 +9,60 @@ tags:
 
 ## 我是h2标题
 
-xxx
+world.execute
 
 有序列表
 
-1. xxx
-2. xxx
-3. xxx
+1. And let's begin
+2. SIMULATION
+3. world.execute(me);
+4. If I'm a set of points
+5. Then I will give you my
+6. DIMENSION
 
 无序列表
 
-- xxx
-- xxx
-- xxx
+- If I'm a circle
+- Then I will give you my
+- CIRCUMFERENCE
+- If I'm a sine wave
+- Then you can sit on all my
+- TANGENTS
+
+
+## 代码块
+
+JS
+
+```js
+const a = 1
+let b = 2
+
+console.log(a, b)
+function fn() {
+  ...
+}
+```
+
+CSS
+
+```css
+body {
+  color: #333333;
+  background-color: #FFFFFF;
+}
+
+.text {
+  line-height: 2;
+}
+```
+
+HTML
+
+```html
+<body>
+  <header></header>
+  <main></main>
+  <footer></footer>
+</body>
+```
