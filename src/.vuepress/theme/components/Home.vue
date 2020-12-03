@@ -1,328 +1,175 @@
 <template>
-  <main class="home" aria-labelledby="main-title">
+  <main
+    class="home"
+    :aria-labelledby="data.heroText !== null ? 'main-title' : null"
+  >
     <header class="hero">
-      <div class="inner">
-        <div class="left">
-          <img v-if="data.heroImage" :src="$withBase(data.heroImage)" :alt="data.heroAlt || 'hero'" />
-        </div>
+      <img
+        v-if="data.heroImage"
+        :src="$withBase(data.heroImage)"
+        :alt="data.heroAlt || 'hero'"
+      >
 
-        <div class="right">
-          <h1
-            v-if="data.heroText !== null"
-            id="main-title"
-          >{{ data.heroText || $title || 'Vue.js' }}</h1>
+      <h1
+        v-if="data.heroText !== null"
+        id="main-title"
+      >
+        {{ data.heroText || $title || 'Hello' }}
+      </h1>
 
-          <h2 class="tagline" v-if="tagline" v-html="tagline"></h2>
+      <p
+        v-if="data.tagline !== null"
+        class="description"
+      >
+        {{ data.tagline || $description || 'Welcome to your VuePress site' }}
+      </p>
 
-          <div v-if="data.actionButtons.length" class="actions">
-            <HomeActionLink
-              v-for="item in data.actionButtons"
-              :item="item"
-              :extra-class="item.extraClass"
-              :key="item.link"
-            />
-          </div>
-        </div>
-      </div>
+      <p
+        v-if="data.actionText && data.actionLink"
+        class="action"
+      >
+        <NavLink
+          class="action-button"
+          :item="actionLink"
+        />
+      </p>
     </header>
 
-    <SpecialSponsors :sponsors="sponsors.special_sponsors" />
-
-    <section v-if="data.features && data.features.length" class="section-features">
-      <div class="inner">
-        <div v-for="(feature, index) in data.features" :key="index" class="feature">
-          <h2>{{ feature.title }}</h2>
-          <p v-html="feature.details"></p>
-        </div>
+    <div
+      v-if="data.features && data.features.length"
+      class="features"
+    >
+      <div
+        v-for="(feature, index) in data.features"
+        :key="index"
+        class="feature"
+      >
+        <h2>{{ feature.title }}</h2>
+        <p>{{ feature.details }}</p>
       </div>
-    </section>
+    </div>
 
     <Content class="theme-default-content custom" />
 
-    <section class="section-sponsors" ref="sponsors">
-      <div class="inner">
-        <PatreonSponsors :sponsors="sponsors" />
-        <OpenCollectiveSponsors />
-      </div>
-    </section>
-
-    <section class="section-newsletter">
-      <Newsletter />
-    </section>
-
-    <footer class="main-footer">
-      <p v-if="data.socialIcons">
-        <SocialIcon
-          v-for="icon in data.socialIcons"
-          :type="icon.type"
-          :link="icon.link"
-          :key="icon.link"
-          extra-class="inverted"
-        />
-      </p>
-      <p class="copyright" v-html="data.footer"></p>
-    </footer>
+    <div
+      v-if="data.footer"
+      class="footer"
+    >
+      {{ data.footer }}
+    </div>
   </main>
 </template>
 
 <script>
-import sponsors from '@theme/data/patreon-sponsors.js'
-import HomeActionLink from '@theme/components/ui/HomeActionLink.vue'
-import SocialIcon from '@theme/components/ui/SocialIcon.vue'
-import SpecialSponsors from '@theme/components/sponsors/SpecialSponsors.vue'
-import PatreonSponsors from '@theme/components/sponsors/PatreonSponsors.vue'
-import OpenCollectiveSponsors from '@theme/components/sponsors/OpenCollectiveSponsors.vue'
-import Newsletter from '@theme/components/Newsletter.vue'
+import NavLink from '@theme/components/NavLink.vue'
 
 export default {
-  components: {
-    HomeActionLink,
-    SocialIcon,
-    SpecialSponsors,
-    PatreonSponsors,
-    OpenCollectiveSponsors,
-    Newsletter
-  },
+  name: 'Home',
 
-  data: () => ({
-    sponsors
-  }),
+  components: { NavLink },
 
   computed: {
-    data() {
+    data () {
       return this.$page.frontmatter
     },
 
-    tagline() {
-      return (
-        this.data.tagline ||
-        this.$description ||
-        'The Progressive JavaScript Framework'
-      )
-    }
-  },
-
-  mounted() {
-    if (!window) {
-      return
-    }
-
-    const sponsors = this.$refs.sponsors
-    let sponsorTop = sponsors.offsetTop
-    let sponsorActive = false
-
-    window.addEventListener('resize', () => (sponsorTop = sponsors.offsetTop))
-
-    window.addEventListener('scroll', () => {
-      if (window.pageYOffset > sponsorTop - 100) {
-        if (!sponsorActive) {
-          sponsorActive = true
-          sponsors.classList.add('active')
-        }
-      } else {
-        if (sponsorActive) {
-          sponsorActive = false
-          sponsors.classList.remove('active')
-        }
+    actionLink () {
+      return {
+        link: this.data.actionLink,
+        text: this.data.actionText
       }
-    })
+    }
   }
 }
 </script>
 
-<style lang="scss">
-@import '@theme/styles/_settings.scss';
+<style lang="stylus">
+.home
+  padding $navbarHeight 2rem 0
+  max-width $homePageWidth
+  margin 0px auto
+  display block
+  .hero
+    text-align center
+    img
+      max-width: 100%
+      max-height 280px
+      display block
+      margin 3rem auto 1.5rem
+    h1
+      font-size 3rem
+    h1, .description, .action
+      margin 1.8rem auto
+    .description
+      max-width 35rem
+      font-size 1.6rem
+      line-height 1.3
+      color lighten($textColor, 40%)
+    .action-button
+      display inline-block
+      font-size 1.2rem
+      color #fff
+      background-color $accentColor
+      padding 0.8rem 1.6rem
+      border-radius 4px
+      transition background-color .1s ease
+      box-sizing border-box
+      border-bottom 1px solid darken($accentColor, 10%)
+      &:hover
+        background-color lighten($accentColor, 10%)
+  .features
+    border-top 1px solid $borderColor
+    padding 1.2rem 0
+    margin-top 2.5rem
+    display flex
+    flex-wrap wrap
+    align-items flex-start
+    align-content stretch
+    justify-content space-between
+  .feature
+    flex-grow 1
+    flex-basis 30%
+    max-width 30%
+    h2
+      font-size 1.4rem
+      font-weight 500
+      border-bottom none
+      padding-bottom 0
+      color lighten($textColor, 10%)
+    p
+      color lighten($textColor, 25%)
+  .footer
+    padding 2.5rem
+    border-top 1px solid $borderColor
+    text-align center
+    color lighten($textColor, 25%)
 
-.home {
-  font-family: $fontHome;
-}
+@media (max-width: $MQMobile)
+  .home
+    .features
+      flex-direction column
+    .feature
+      max-width 100%
+      padding 0 2.5rem
 
-.hero {
-  padding: 100px 40px 30px;
-
-  html.with-beta-banner & {
-    padding-top: calc(100px + 3rem);
-  }
-
-  .inner {
-    max-width: 1260px;
-    margin: 0 auto;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-  }
-
-  .left {
-    width: 39%;
-    text-align: right;
-
-    img {
-      width: 215px;
-      height: 215px;
-      margin-right: 60px;
-    }
-  }
-
-  .actions {
-    display: flex;
-    margin-top: 2.3rem;
-  }
-
-  .right {
-    width: 61%;
-
-    h1 {
-      display: none;
-    }
-
-    .tagline {
-      font-size: 3.2rem;
-      padding: 0;
-      margin: 0;
-      border-bottom: 0;
-      font-weight: 300;
-    }
-  }
-
-  @media (max-width: $MQNarrow) {
-    .inner {
-      flex-direction: column;
-      text-align: center;
-    }
-
-    .left {
-      img {
-        margin-right: 0;
-      }
-    }
-
-    .left,
-    .right {
-      width: 100%;
-      text-align: center;
-    }
-
-    .right {
-      h1 {
-        display: block;
-      }
-
-      .tagline {
-        font-size: 2rem;
-      }
-    }
-
-    .actions {
-      flex-direction: column;
-      place-items: center;
-
-      a {
-        height: 28px;
-        margin-bottom: 10px;
-      }
-    }
-  }
-}
-
-.section-features {
-  padding: 25px 40px 45px;
-
-  .inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    align-content: stretch;
-    justify-content: space-between;
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: center;
-
-    @media (max-width: $MQNarrow) {
-      flex-direction: column;
-    }
-  }
-
-  .feature {
-    h2 {
-      border-bottom: 0;
-      color: $green;
-      font-weight: 400;
-    }
-
-    flex-grow: 1;
-    flex-basis: 30%;
-    max-width: 30%;
-
-    @media (max-width: $MQNarrow) {
-      max-width: 100%;
-      width: 100%;
-
-      &::before {
-        content: '—';
-        color: $green;
-      }
-    }
-  }
-}
-
-.section-sponsors {
-  background: #f6f6f6;
-  text-align: center;
-  padding: 35px 40px 45px;
-
-  &.active {
-    img {
-      filter: none;
-      opacity: 1;
-    }
-  }
-
-  .inner {
-    max-width: 700px;
-    margin: 0 auto;
-  }
-
-  .sponsors + .sponsors {
-    margin-top: 5rem;
-  }
-
-  a {
-    display: inline-block;
-    vertical-align: middle;
-    margin: 20px 15px 0;
-    position: relative;
-  }
-
-  img {
-    transition: all 0.3s ease;
-    filter: grayscale(100%);
-    opacity: 0.6;
-
-    &:hover {
-      filter: none;
-      opacity: 1;
-    }
-  }
-}
-
-footer.main-footer {
-  background: #475050;
-  text-align: center;
-  color: #fff;
-  padding: 40px 0;
-  font-size: 0.9rem;
-
-  a {
-    color: #fff;
-  }
-
-  .social-icon {
-    margin: 0 5px;
-    font-size: 1.2rem;
-
-    i {
-      color: #fff;
-    }
-  }
-}
+@media (max-width: $MQMobileNarrow)
+  .home
+    padding-left 1.5rem
+    padding-right 1.5rem
+    .hero
+      img
+        max-height 210px
+        margin 2rem auto 1.2rem
+      h1
+        font-size 2rem
+      h1, .description, .action
+        margin 1.2rem auto
+      .description
+        font-size 1.2rem
+      .action-button
+        font-size 1rem
+        padding 0.6rem 1.2rem
+    .feature
+      h2
+        font-size 1.25rem
 </style>

@@ -1,40 +1,16 @@
 ---
 home: true
 heroImage: /logo.png
-heroText: Vue.js
-tagline: The Progressive<br> JavaScript Framework
-actionButtons:
-  - text: Why Vue.js?
-    link: /
-    extraClass: vuemastery-trigger primary
-    icon: fa fa-play-circle
-  - text: Get Started
-    link: /guide/introduction
-  - text: GitHub
-    link: https://github.com/vuejs/vue-next
-    extraClass: github grey
-    icon: fa fa-github
-    target: _blank
+heroText: Hero 标题
+tagline: Hero 副标题
+actionText: 快速上手 →
+actionLink: /bar/
 features:
-  - title: Approachable
-    details: Already know HTML, CSS and JavaScript? Read the guide and start building things in no time!
-  - title: Versatile
-    details: An incrementally adoptable ecosystem that scales between a library and a full-featured framework.
-  - title: Performant
-    details: |
-      20KB min+gzip Runtime<br>
-      Blazing Fast Virtual DOM<br>
-      Minimal Optimization Efforts
-footer: |
-  Released under the <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener">MIT License</a><br>
-  Copyright © 2014-2020 Evan You
-socialIcons:
-  - type: GitHub
-    link: https://github.com/vuejs/vue-next
-  - type: Twitter
-    link: https://twitter.com/vuejs
-  - type: Medium
-    link: https://medium.com/the-vue-point
+- title: 简洁至上
+  details: 以 Markdown 为中心的项目结构，以最少的配置帮助你专注于写作。
+- title: Vue驱动
+  details: 享受 Vue + webpack 的开发体验，在 Markdown 中使用 Vue 组件，同时可以使用 Vue 来开发自定义主题。
+- title: 高性能
+  details: VuePress 为每个页面预渲染生成静态的 HTML，同时在页面被加载的时候，将作为 SPA 运行。
+footer: MIT Licensed | Copyright © 2018-present Evan You
 ---
-
-<common-vuemastery-video-modal/>

@@ -5,12 +5,20 @@
     @touchstart="onTouchStart"
     @touchend="onTouchEnd"
   >
-    <VueMasteryBanner v-if="isBannerOpen" @close-banner="closeBanner" ref='vueMasteryBanner'/>
-    <Navbar v-if="shouldShowNavbar" @toggle-sidebar="toggleSidebar" />
+    <Navbar
+      v-if="shouldShowNavbar"
+      @toggle-sidebar="toggleSidebar"
+    />
 
-    <div class="sidebar-mask" @click="toggleSidebar(false)" />
+    <div
+      class="sidebar-mask"
+      @click="toggleSidebar(false)"
+    />
 
-    <Sidebar :items="sidebarItems" @toggle-sidebar="toggleSidebar">
+    <Sidebar
+      :items="sidebarItems"
+      @toggle-sidebar="toggleSidebar"
+    >
       <template #top>
         <slot name="sidebar-top" />
       </template>
@@ -21,7 +29,10 @@
 
     <Home v-if="$page.frontmatter.home" />
 
-    <Page v-else :sidebar-items="sidebarItems">
+    <Page
+      v-else
+      :sidebar-items="sidebarItems"
+    >
       <template #top>
         <slot name="page-top" />
       </template>
@@ -37,7 +48,6 @@ import Home from '@theme/components/Home.vue'
 import Navbar from '@theme/components/Navbar.vue'
 import Page from '@theme/components/Page.vue'
 import Sidebar from '@theme/components/Sidebar.vue'
-import VueMasteryBanner from '@theme/components/sponsors/VueMasteryBanner.vue'
 import { resolveSidebarItems } from '../util'
 
 export default {
@@ -47,17 +57,12 @@ export default {
     Home,
     Page,
     Sidebar,
-    Navbar,
-    VueMasteryBanner
+    Navbar
   },
 
   data () {
     return {
-      isSidebarOpen: false,
-      isBannerOpen:  true,
-      isMenuFixed: false,
-      nameStorage: 'vuemastery-black-firday-2020-banner',
-      menuPosition: 0
+      isSidebarOpen: false
     }
   },
 
@@ -65,24 +70,26 @@ export default {
     shouldShowNavbar () {
       const { themeConfig } = this.$site
       const { frontmatter } = this.$page
-      if (frontmatter.navbar === false || themeConfig.navbar === false) {
+      if (
+        frontmatter.navbar === false
+        || themeConfig.navbar === false) {
         return false
       }
       return (
-        this.$title ||
-        themeConfig.logo ||
-        themeConfig.repo ||
-        themeConfig.nav ||
-        this.$themeLocaleConfig.nav
+        this.$title
+        || themeConfig.logo
+        || themeConfig.repo
+        || themeConfig.nav
+        || this.$themeLocaleConfig.nav
       )
     },
 
     shouldShowSidebar () {
       const { frontmatter } = this.$page
       return (
-        !frontmatter.home &&
-        frontmatter.sidebar !== false &&
-        this.sidebarItems.length
+        !frontmatter.home
+        && frontmatter.sidebar !== false
+        && this.sidebarItems.length
       )
     },
 
@@ -101,9 +108,7 @@ export default {
         {
           'no-navbar': !this.shouldShowNavbar,
           'sidebar-open': this.isSidebarOpen,
-          'no-sidebar': !this.shouldShowSidebar,
-          'vuemastery-menu-fixed': this.isMenuFixed,
-          'vuemastery-promo': this.isBannerOpen
+          'no-sidebar': !this.shouldShowSidebar
         },
         userPageClass
       ]
@@ -114,13 +119,6 @@ export default {
     this.$router.afterEach(() => {
       this.isSidebarOpen = false
     })
-
-    // Load component according to user preferences
-    if (!localStorage.getItem(this.nameStorage)) {
-      this.initBanner()
-    } else {
-      this.isBannerOpen = false
-    }
   },
 
   methods: {
@@ -147,54 +145,6 @@ export default {
           this.toggleSidebar(false)
         }
       }
-    },
-
-    //  Vue Mastery Banner
-    initBanner() {
-      // Add event listeners
-      this.toggleBannerEvents(true)
-      // Add class to the body to push fixed elements
-      this.isBannerOpen = true
-      // Get the menu position
-      this.getMenuPosition()
-      // Check current page offset position
-      this.isMenuFixed = this.isUnderBanner()
-    },
-
-    closeBanner (e) {
-      // Remove events
-      this.toggleBannerEvents(false)
-      // Hide the banner
-      this.isBannerOpen = false
-      // Save action in the local storage
-      localStorage.setItem(this.nameStorage, true)
-    },
-
-    getMenuPosition() {
-      this.menuPosition = this.$refs.vueMasteryBanner.$el.clientHeight
-    },
-
-    isUnderBanner() {
-      return window.pageYOffset > this.menuPosition
-    },
-
-    fixMenuAfterBanner() {
-      if (this.isUnderBanner()) {
-        if (!this.isMenuFixed) {
-          // The menu will be fixed
-          this.isMenuFixed = true
-        }
-      } else if (this.isMenuFixed) {
-        // The menu stay under the banner
-        this.isMenuFixed = false
-      }
-    },
-
-    toggleBannerEvents(on) {
-      // Add or remove event listerners attached to the DOM
-      let method = on ? "addEventListener" : "removeEventListener"
-      window[method]("resize", this.getMenuPosition)
-      window[method]("scroll", this.fixMenuAfterBanner)
     }
   }
 }

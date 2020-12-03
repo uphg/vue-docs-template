@@ -1,26 +1,23 @@
 <template>
   <footer class="page-edit">
-    <div class="container">
-      <p>
-        Deployed on
-        <a href="https://url.netlify.com/HJ8X2mxP8">Netlify</a>.
-        <span v-if="editLink" class="edit-link">
-          Caught a mistake or want to contribute to the documentation?
-          <a
-            :href="editLink"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {{ editLinkText }}
-            <OutboundLink />
-          </a>
-        </span>
-        <template v-if="lastUpdated" class="last-updated">
-          <br />
-          <span class="prefix">{{ lastUpdatedText }}:</span>
-          <span class="time">{{ lastUpdated }}</span>
-        </template>
-      </p>
+    <div
+      v-if="editLink"
+      class="edit-link"
+    >
+      <a
+        :href="editLink"
+        target="_blank"
+        rel="noopener noreferrer"
+      >{{ editLinkText }}</a>
+      <OutboundLink />
+    </div>
+
+    <div
+      v-if="lastUpdated"
+      class="last-updated"
+    >
+      <span class="prefix">{{ lastUpdatedText }}:</span>
+      <span class="time">{{ lastUpdated }}</span>
     </div>
   </footer>
 </template>
@@ -33,11 +30,11 @@ export default {
   name: 'PageEdit',
 
   computed: {
-    lastUpdated() {
+    lastUpdated () {
       return this.$page.lastUpdated
     },
 
-    lastUpdatedText() {
+    lastUpdatedText () {
       if (typeof this.$themeLocaleConfig.lastUpdated === 'string') {
         return this.$themeLocaleConfig.lastUpdated
       }
@@ -47,7 +44,7 @@ export default {
       return 'Last Updated'
     },
 
-    editLink() {
+    editLink () {
       const showEditLink = isNil(this.$page.frontmatter.editLink)
         ? this.$site.themeConfig.editLinks
         : this.$page.frontmatter.editLink
@@ -71,27 +68,39 @@ export default {
       return null
     },
 
-    editLinkText() {
+    editLinkText () {
       return (
-        this.$themeLocaleConfig.editLinkText ||
-        this.$site.themeConfig.editLinkText ||
-        `Edit this page`
+        this.$themeLocaleConfig.editLinkText
+        || this.$site.themeConfig.editLinkText
+        || `Edit this page`
       )
     }
   },
 
   methods: {
-    createEditLink(repo, docsRepo, docsDir, docsBranch, path) {
+    createEditLink (repo, docsRepo, docsDir, docsBranch, path) {
       const bitbucket = /bitbucket.org/
-      if (bitbucket.test(repo)) {
-        const base = outboundRE.test(docsRepo) ? docsRepo : repo
+      if (bitbucket.test(docsRepo)) {
+        const base = docsRepo
         return (
-          base.replace(endingSlashRE, '') +
-          `/src` +
-          `/${docsBranch}/` +
-          (docsDir ? docsDir.replace(endingSlashRE, '') + '/' : '') +
-          path +
-          `?mode=edit&spa=0&at=${docsBranch}&fileviewer=file-view-default`
+          base.replace(endingSlashRE, '')
+          + `/src`
+          + `/${docsBranch}/`
+          + (docsDir ? docsDir.replace(endingSlashRE, '') + '/' : '')
+          + path
+          + `?mode=edit&spa=0&at=${docsBranch}&fileviewer=file-view-default`
+        )
+      }
+
+      const gitlab = /gitlab.com/
+      if (gitlab.test(docsRepo)) {
+        const base = docsRepo
+        return (
+          base.replace(endingSlashRE, '')
+          + `/-/edit`
+          + `/${docsBranch}/`
+          + (docsDir ? docsDir.replace(endingSlashRE, '') + '/' : '')
+          + path
         )
       }
 
@@ -99,44 +108,48 @@ export default {
         ? docsRepo
         : `https://github.com/${docsRepo}`
       return (
-        base.replace(endingSlashRE, '') +
-        `/edit` +
-        `/${docsBranch}/` +
-        (docsDir ? docsDir.replace(endingSlashRE, '') + '/' : '') +
-        path
+        base.replace(endingSlashRE, '')
+        + '/edit'
+        + `/${docsBranch}/`
+        + (docsDir ? docsDir.replace(endingSlashRE, '') + '/' : '')
+        + path
       )
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-@import '@theme/styles/_settings.scss';
+<style lang="stylus">
+@require '../styles/wrapper.styl'
 
-/*
-  This entire style block is MVP style wise and will likely
-  be changed with the new atomic theme. Changes are welcome!
- */
-.edit-link {
-  margin-bottom: 0.5rem;
-}
+.page-edit
+  @extend $wrapper
+  padding-top 1rem
+  padding-bottom 1rem
+  overflow auto
 
-.page-edit {
-  padding: 0 1.5rem;
-  max-width: 740px;
-  margin: 0 auto;
-  font-size: 0.95em;
-  color: $light;
-  text-align: center;
+  .edit-link
+    display inline-block
+    a
+      color lighten($textColor, 25%)
+      margin-right 0.25rem
+  .last-updated
+    float right
+    font-size 0.9em
+    .prefix
+      font-weight 500
+      color lighten($textColor, 25%)
+    .time
+      font-weight 400
+      color #767676
 
-  p {
-    margin: 0.8rem auto;
-  }
+@media (max-width: $MQMobile)
+  .page-edit
+    .edit-link
+      margin-bottom 0.5rem
+    .last-updated
+      font-size 0.8em
+      float none
+      text-align left
 
-  .container {
-    border: 1px solid #eaecef;
-    border-radius: 5px;
-    padding: 0 1.5rem;
-  }
-}
 </style>
