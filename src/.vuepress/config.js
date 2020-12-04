@@ -1,8 +1,6 @@
 const nav = require( "./nav.js" )
 const sidebar = require( "./sidebar.js" )
 
-
-
 module.exports = {
   base: '/vue-docs-template/',
   title: 'Vue.js',
